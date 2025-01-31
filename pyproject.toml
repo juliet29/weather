@@ -1,0 +1,33 @@
+[project]
+name = "weather"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Juliet Nwagwu Ume-Ezeoke", email = "jnwagwu@stanford.edu" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "altair>=5.5.0",
+    "duckdb>=1.1.3",
+    "epw>=1.2.dev2",
+    "ipykernel>=6.29.5",
+    "ladybug-core>=0.43.22",
+    "marimo>=0.10.15",
+    "matplotlib>=3.10.0",
+    "numpy>=2.2.2",
+    "pandas>=2.2.3",
+    "polars>=1.20.0",
+    "pyarrow>=19.0.0",
+    "pyprojroot>=0.3.0",
+    "scipy>=1.15.1",
+    "statsmodels>=0.14.4",
+    "vl-convert-python>=1.7.0",
+]
+
+[project.scripts]
+weather = "weather:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,10 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "marimo.marimoPath": "\"${workspaceFolder}/.venv/bin/marimo\""
+  }
+}
