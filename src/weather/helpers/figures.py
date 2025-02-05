@@ -7,3 +7,7 @@ def get_todays_save_path():
     if not path.exists():
         path.mkdir()
     return path
+
+def get_month(df):
+    adate = pendulum.instance(df["datetime"][0])
+    return adate.format("MMM")
