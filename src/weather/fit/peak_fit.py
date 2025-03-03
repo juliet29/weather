@@ -1,28 +1,13 @@
 from collections import namedtuple
-from functools import partial
 import functools
 import polars as pl
 import numpy as np
 import altair as alt
-import matplotlib.pyplot as plt
+import pwlf
 from scipy.optimize import curve_fit
+
+from weather.helpers.filter import init_df
 from .format_check import is_x_formatted_correcly
-
-from weather.helpers.epw_read import read_epw
-from weather.helpers.weather_data import PALO_ALTO_20
-from weather.helpers.filter import filter_df_by_month
-
-
-def init_df(month=6):
-    df = read_epw(PALO_ALTO_20.path)
-    month_filter = partial(filter_df_by_month, df, PALO_ALTO_20)
-    mdf = (
-        month_filter(month)
-        .filter(pl.col("datetime").dt.day() != 30)
-        .select(["datetime", "Dry Bulb Temperature"])
-    )  # last day has only 23 values intead of 24..
-    assert (mdf["datetime"].dt.date().unique_counts().unique() == 24).all()
-    return mdf
 
 
 def peak_temp_prepare(b: float):
@@ -45,14 +30,6 @@ def peak_temp_prepare(b: float):
         return quadratic_term + abs_val_term + b
 
     return peak_temp_fit
-
-
-# def peak_temp_prepare(b):
-#     q = 0.1
-#     return lambda x, k: -(k * q * (x**2)) + b
-
-
-# TODO - find k through some opt scheme..
 
 
 def get_max_temp_and_time(df: pl.DataFrame, day: int):
@@ -120,19 +97,12 @@ def fit_func(df: pl.DataFrame, day: int, bounds=[0.01, 1]):
     popt, pcov = curve_fit(func, true_data.xs, true_data.ys, bounds=bounds)
     # print(popt, pcov)
     return true_data, FitResult(func, popt, pcov), peak_values
-    # plt.plot(xs, ys, 'b-', label='data')
-    # plt.plot(xs, func(xs, *popt), 'r-', label=f'fit: {popt[0]:.3f}, bound=({bounds[0]:.3f}, {bounds[1]:.3f})')
-    # plt.title(f"Day {day}")
-    # plt.legend()
-    # plt.show()
 
-    # # extent is 9, incase peak is at one..
-    # # but plot the times of max also..
-    # pass
 
 @functools.lru_cache
 def prepare_many_fits(bounds=[1e-3, 1], n_days=9):
     print(bounds)
+
     def create_day_df(day: int):
         true_data, fit_result, peak_values = fit_func(month_df, day, bounds)
         data_len = len(true_data.hours)
@@ -146,11 +116,11 @@ def prepare_many_fits(bounds=[1e-3, 1], n_days=9):
                 "xs": true_data.xs,
                 "ys": true_data.ys,
                 "fit_ys": fit_result.func(true_data.xs, *fit_result.popt),
-                "popt": [fit_result.popt[0]]*data_len,
-                "pcov": [fit_result.pcov[0][0]]*data_len,
-                "peak_temp": [peak_values.peak_temp]*data_len,
-                "peak_hour": [peak_values.peak_hour]*data_len,
-                "formatted_fit": [formatted_fit] + [""]*(data_len-1),
+                "popt": [fit_result.popt[0]] * data_len,
+                "pcov": [fit_result.pcov[0][0]] * data_len,
+                "peak_temp": [peak_values.peak_temp] * data_len,
+                "peak_hour": [peak_values.peak_hour] * data_len,
+                "formatted_fit": [formatted_fit] + [""] * (data_len - 1),
             }
         )
 
@@ -178,9 +148,32 @@ def plot_many_fits(fits_df: pl.DataFrame):
         y=alt.value(90),
         x=alt.value(12),
         # all the same value on a given day, so mean is taking the unique
-        text=alt.Text("formatted_fit")
+        text=alt.Text("formatted_fit"),
     )
 
     res = (base + fit + text1).facet(facet=alt.Column("day"), columns=4)
 
     return res
+
+
+def create_regression_model(fits_df: pl.DataFrame):
+    grouped_fit = fits_df.group_by("day").agg(
+        [
+            pl.col("popt").unique().first(),
+            pl.col("peak_temp").unique().first(),
+            pl.col("peak_hour").unique().first(),
+        ]
+    )
+
+    model = pwlf.PiecewiseLinFit(grouped_fit["peak_temp"], grouped_fit["popt"])
+    # model has two parameters on observation
+    model.fit(2)
+    # TO PREDICT: `model.predict(grouped_fit["peak_temp"])`
+    return model
+
+    # source = grouped_fit.with_columns(
+    # fit_popt=pl.Series(predicted))
+
+
+# def plot_regression_model():
+#     pass
