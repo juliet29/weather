@@ -763,6 +763,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pwlf"
+version = "2.5.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/bc/15/edc2c1aa867eb7fb5fc7a825d7fca78a3a87ffabfc8b3e595ae0366e7b97/pwlf-2.5.1.tar.gz", hash = "sha256:d60cade349682df4c1c8952e0a8761afdb1aca601718c253ae11d6add0799a6d", size = 21890 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/58/d9/299fcac7c36c89c27f0287d48e4d36c628fdcd579249f1648c62dbc8e931/pwlf-2.5.1-py3-none-any.whl", hash = "sha256:95f1b982ea640060e1acc8374d5181822b38a70db8106bc87c614f8bbdcfb5be", size = 17443 },
+]
+
+[[package]]
 name = "pyarrow"
 version = "19.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1214,6 +1227,7 @@ dependencies = [
     { name = "numpy" },
     { name = "pandas" },
     { name = "polars" },
+    { name = "pwlf" },
     { name = "pyarrow" },
     { name = "pyprojroot" },
     { name = "scipy" },
@@ -1234,6 +1248,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.2.2" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "polars", specifier = ">=1.20.0" },
+    { name = "pwlf", specifier = ">=2.5.1" },
     { name = "pyarrow", specifier = ">=19.0.0" },
     { name = "pyprojroot", specifier = ">=0.3.0" },
     { name = "scipy", specifier = ">=1.15.1" },

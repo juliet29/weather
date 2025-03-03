@@ -18,6 +18,7 @@ dependencies = [
     "numpy>=2.2.2",
     "pandas>=2.2.3",
     "polars>=1.20.0",
+    "pwlf>=2.5.1",
     "pyarrow>=19.0.0",
     "pyprojroot>=0.3.0",
     "scipy>=1.15.1",
