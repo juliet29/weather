@@ -8,6 +8,8 @@ from weather.helpers.weather_data import PALO_ALTO_20
 
 from .weather_data import WeatherData
 
+TEMPERATURE = "Dry Bulb Temperature"
+
 
 def filter_df_by_month(df: pl.DataFrame, weather_data: WeatherData, month, n_days=30):
     assert month != 2 and n_days > 28
@@ -18,6 +20,8 @@ def filter_df_by_month(df: pl.DataFrame, weather_data: WeatherData, month, n_day
         )
     )
 
+
+
 @functools.lru_cache()
 def init_df(month=6, weather_data=PALO_ALTO_20):
     df = read_epw(weather_data.path)
@@ -25,7 +29,11 @@ def init_df(month=6, weather_data=PALO_ALTO_20):
     mdf = (
         month_filter(month)
         .filter(pl.col("datetime").dt.day() != 30)
-        .select(["datetime", "Dry Bulb Temperature"])
+        .select(["datetime", TEMPERATURE])
     )  # last day has only 23 values intead of 24..
     assert (mdf["datetime"].dt.date().unique_counts().unique() == 24).all()
     return mdf
+
+def filter_by_day(df:pl.DataFrame, day:int):
+    assert 1 <= day  <= 31
+    return  df.filter(pl.col("datetime").dt.day() == day)

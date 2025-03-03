@@ -150,4 +150,4 @@ def read_epw(file: Path):
     assert file.exists
     e = epw()
     e.read(file)
-    return clean_up_df(e.dataframe)
+    return clean_up_df(e.dataframe) # type: ignore
