@@ -1166,6 +1166,18 @@ wheels = [
 ]
 
 [[package]]
+name = "vega-datasets"
+version = "0.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pandas" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/a0/ce608d9a5b82fce2ebaa2311136b1e1d1dc2807f501bbdfa56bd174fff76/vega_datasets-0.9.0.tar.gz", hash = "sha256:9dbe9834208e8ec32ab44970df315de9102861e4cda13d8e143aab7a80d93fc0", size = 215013 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e6/9f/ca52771fe972e0dcc5167fedb609940e01516066938ff2ee28b273ae4f29/vega_datasets-0.9.0-py3-none-any.whl", hash = "sha256:3d7c63917be6ca9b154b565f4779a31fedce57b01b5b9d99d8a34a7608062a1d", size = 210822 },
+]
+
+[[package]]
 name = "vl-convert-python"
 version = "1.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1206,6 +1218,7 @@ dependencies = [
     { name = "pyprojroot" },
     { name = "scipy" },
     { name = "statsmodels" },
+    { name = "vega-datasets" },
     { name = "vl-convert-python" },
 ]
 
@@ -1225,6 +1238,7 @@ requires-dist = [
     { name = "pyprojroot", specifier = ">=0.3.0" },
     { name = "scipy", specifier = ">=1.15.1" },
     { name = "statsmodels", specifier = ">=0.14.4" },
+    { name = "vega-datasets", specifier = ">=0.9.0" },
     { name = "vl-convert-python", specifier = ">=1.7.0" },
 ]
 
