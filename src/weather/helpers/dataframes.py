@@ -37,3 +37,8 @@ def init_df(month=6, weather_data=PALO_ALTO_20):
 def filter_by_day(df:pl.DataFrame, day:int):
     assert 1 <= day  <= 31
     return  df.filter(pl.col("datetime").dt.day() == day)
+
+def filter_by_days(df:pl.DataFrame, days:list[int]):
+    for day in days:
+        assert 1 <= day  <= 31
+    return  df.filter(pl.col("datetime").dt.day().is_in(days))

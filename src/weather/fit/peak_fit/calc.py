@@ -1,7 +1,7 @@
 from weather.fit.format_check import is_x_formatted_correcly
 
 
-Q = 0.1  # adjustment for the quadratic function
+Q = 0.01  # adjustment for the quadratic function
 A = 1  # adjustment for the absolute value function
 
 def calc_peak_profile(x, b, r):

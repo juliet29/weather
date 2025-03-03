@@ -128,10 +128,10 @@ def fit_peak_profile(
     df:pl.DataFrame, day: int, r_peak_temp_model: pwlf.PiecewiseLinFit, extent=EXTENT
 ):
     peak_values = get_max_temp_and_time(df, day)
-    print(f"peak_values: {peak_values}")
+    # print(f"peak_values: {peak_values}")
     
     r = r_peak_temp_model.predict(peak_values.temp)[0]
-    print(f"r for peak_fit: {r}")
+    # print(f"r for peak_fit: {r}")
     xs = generate_xs(extent)
 
     return Profile(
