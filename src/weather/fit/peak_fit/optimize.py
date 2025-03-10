@@ -6,7 +6,7 @@ import pwlf
 from scipy.optimize import curve_fit
 
 from weather.helpers.time import create_centered_interval
-from weather.helpers.dataframes import init_df
+from weather.helpers.dataframes import init_month_df
 from ..interfaces import Profile
 
 from .calc import calc_peak_profile, peak_temp_prepare
@@ -82,7 +82,7 @@ def prepare_many_fits(bounds=[1e-3, 1], n_days=9):
             }
         )
 
-    month_df = init_df()
+    month_df = init_month_df()
     dfs = [create_day_df(i) for i in range(1, n_days + 1)]
     return pl.concat(dfs)
 
@@ -90,16 +90,21 @@ def prepare_many_fits(bounds=[1e-3, 1], n_days=9):
 def create_r_peak_temp_model(fits_df: pl.DataFrame):
     def plot_fit():
         predicted = model.predict(grouped_fit["peak_temp"])
-        source = grouped_fit.with_columns(
-        fit_popt=pl.Series(predicted))
+        source = grouped_fit.with_columns(fit_popt=pl.Series(predicted))
 
-        base = alt.Chart(source).mark_circle().encode(
-            alt.X("peak_temp:Q").scale(zero=False), alt.Y("popt:Q").scale(zero=False)
+        base = (
+            alt.Chart(source)
+            .mark_circle()
+            .encode(
+                alt.X("peak_temp:Q").scale(zero=False),
+                alt.Y("popt:Q").scale(zero=False),
+            )
         )
 
         fit_pwlf = base.mark_line().encode(
-            alt.X("peak_temp:Q").scale(zero=False), alt.Y("fit_popt:Q").scale(zero=False),
-            color=alt.value("black")
+            alt.X("peak_temp:Q").scale(zero=False),
+            alt.Y("fit_popt:Q").scale(zero=False),
+            color=alt.value("black"),
         )
 
         print(f"P-values: {model.p_values()}")
@@ -118,18 +123,16 @@ def create_r_peak_temp_model(fits_df: pl.DataFrame):
     # model has two parameters on observation
     model.fit(2)
 
-    plot_fit()
+    # plot_fit()
     return model
 
 
-
-
 def fit_peak_profile(
-    df:pl.DataFrame, day: int, r_peak_temp_model: pwlf.PiecewiseLinFit, extent=EXTENT
+    df: pl.DataFrame, day: int, r_peak_temp_model: pwlf.PiecewiseLinFit, extent=EXTENT
 ):
     peak_values = get_max_temp_and_time(df, day)
     # print(f"peak_values: {peak_values}")
-    
+
     r = r_peak_temp_model.predict(peak_values.temp)[0]
     # print(f"r for peak_fit: {r}")
     xs = generate_xs(extent)

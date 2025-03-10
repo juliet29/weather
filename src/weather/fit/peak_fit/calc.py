@@ -1,4 +1,5 @@
 from weather.fit.format_check import is_x_formatted_correcly
+import numpy as np
 
 
 Q = 0.01  # adjustment for the quadratic function
@@ -24,7 +25,7 @@ def peak_temp_prepare(b: float):
         # assert k > 0 and k <= 1
         assert is_x_formatted_correcly(x)
 
-        quadratic_term = -(r * Q * (x**2))
+        quadratic_term =  -(r * Q * (x**2))
         abs_val_term = -abs((1 - r) * A * x)
 
         return quadratic_term + abs_val_term + b

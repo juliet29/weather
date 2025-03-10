@@ -3,7 +3,7 @@ import polars as pl
 import altair as alt
 import numpy as np
 from .interfaces import Profile
-from weather.helpers.dataframes import TEMPERATURE, filter_by_day, init_df
+from weather.helpers.dataframes import TEMPERATURE, filter_by_day, init_month_df
 from scipy.stats import linregress
 
 from weather.helpers.time import create_interval
@@ -49,7 +49,7 @@ def create_time_of_day_linear_model(
 
 def visually_check_regression(hour_pair: HourPair, model: LinRegModel):
     hour_1, hour_2 = hour_pair
-    filtered_df = filter_to_times_of_day(init_df(), hour_pair)
+    filtered_df = filter_to_times_of_day(init_month_df(), hour_pair)
 
     fit_res = model(filtered_df[str(hour_1)])  # type: ignore
     source = filtered_df.with_columns(fit_data=pl.Series(fit_res))
@@ -74,7 +74,7 @@ def visually_check_regression(hour_pair: HourPair, model: LinRegModel):
 def create_morning_and_evening_models(
     show_reg=False,
 ) -> tuple[LinRegModel, LinRegModel]:
-    df = init_df()
+    df = init_month_df()
     morning_model = create_time_of_day_linear_model(df, MORNING)
     evening_model = create_time_of_day_linear_model(df, EVENING)
 

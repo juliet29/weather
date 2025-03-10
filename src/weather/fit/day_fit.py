@@ -80,11 +80,11 @@ def test_similarity(profiles_df:pl.DataFrame):
     p = res.pvalue
 
     print("\n----------------------")
-    print("Null hypothesis: two distributions are idenitical.")
+    print("Null hypothesis: samples are drawn from the same distribution.")
     if p < P_THRESHOLD:
-        print(f"P-value {p:.3f} < {P_THRESHOLD}. Reject the null hypothesis - distributions ARE NOT identical")
+        print(f"P-value {p:.3f} < {P_THRESHOLD}. Reject the null hypothesis - samples ARE NOT  drawn from the same distribution.")
     else:
-        print(f"P-value {p:.3f} >= {P_THRESHOLD}. Cannot reject the null hypothesis - distributions may be identical.")
+        print(f"P-value {p:.3f} >= {P_THRESHOLD}. Cannot reject the null hypothesis - samples MAY be drawn from the same distribution.")
 
     return res
 

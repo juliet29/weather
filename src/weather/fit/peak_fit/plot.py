@@ -7,7 +7,7 @@ def plot_many_fits(fits_df: pl.DataFrame):
         alt.Chart(fits_df)
         .mark_line()
         .encode(alt.X("hours(time):T", title="hours"), alt.Y("ys").scale(zero=False))
-        .rties(width=100, height=100)
+        .properties(width=100, height=100)
     )
 
     fit = base.mark_line().encode(
